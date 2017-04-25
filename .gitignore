@@ -1,0 +1,10 @@
+node_modules
+.DS_Store
+*.swp
+*.swo
+.idea/
+*.iml
+logs
+local/
+coverage/
+test
