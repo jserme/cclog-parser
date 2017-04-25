@@ -1,4 +1,4 @@
-# cclog-parser [![npm][npm-img]][npm-url][![standard][standard-image]][standard-url] [![downloads][downloads-img]][npm-url]
+# cclog-parser [![npm][npm-img]][npm-url] [![standard][standard-image]][standard-url] [![downloads][downloads-img]][npm-url]
 
 conventional-changelog log parser
 
