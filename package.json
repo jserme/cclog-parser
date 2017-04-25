@@ -1,6 +1,6 @@
 {
   "name": "cclog-parser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "conventional-changelog parser",
   "main": "index.js",
   "directories": {
@@ -9,6 +9,7 @@
   "scripts": {
     "test": "standard index.js, test/*; mocha ",
     "commit": "git-cz",
+    "release": "npm publish && git tag v$npm_package_version && git push origin v$npm_package_version",
     "changelog": "conventional-changelog -p angular -i changelog.md -s"
   },
   "repository": {
