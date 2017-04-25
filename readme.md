@@ -50,6 +50,12 @@ const parser = require('cclog-parser')
 const result = parser(changelog)
 ```
 
+### OPTIONS
+
+* includeDetails: true 
+
+toggle commit message detail include
+
 ### OUTPUT
 
 ```javascript
