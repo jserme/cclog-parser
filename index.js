@@ -92,7 +92,7 @@ function parseChangelog (changelog, options) {
           curType = 'features'
         }
 
-        if (buf === TYPES.BREAKING_CHANGES){
+        if (buf === TYPES.BREAKING_CHANGES) {
           curType = 'breakingChanges'
         }
 
@@ -103,12 +103,16 @@ function parseChangelog (changelog, options) {
       }
     },
     'DES': (function (include) {
+      function pushBuf () {
+        if (curVerion && curType) {
+          rst.changes[curVerion][curType].push(buf)
+        }
+      }
+
       if (include) {
         return function () {
           if (peek(cur) === EOL || EOF) {
-            if(curVerion && curType) {
-                rst.changes[curVerion][curType].push(buf)
-            }
+            pushBuf()
             buf = ''
             state = STATES.NULL
           } else {
@@ -122,9 +126,7 @@ function parseChangelog (changelog, options) {
             peek(cur + 1) === '(' &&
             peek(cur + 2) === '['
           ) {
-            if(curVerion && curType) {
-                rst.changes[curVerion][curType].push(buf)
-            }
+            pushBuf()
             buf = ''
             cur += 2
             state = STATES.NULL

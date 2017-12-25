@@ -49,5 +49,7 @@ describe('cclog-parser', function () {
     assert(rst.versions.length > 10)
     assert(Object.keys(rst.changes).length > 10)
     assert(Object.keys(rst.changes).length === rst.versions.length)
+    // make sure breakingChanges has parsed correctly
+    assert(Object.keys(rst.changes).some(v => { return rst.changes[v].breakingChanges.length > 0 }))
   })
 })
