@@ -15,6 +15,7 @@ describe('cclog-parser', function () {
   const empty = readFix('empty.md')
   const simple = readFix('simple.md')
   const karma = readFix('karma.md')
+  const conventionalcommits = readFix('conventionalcommits.md')
 
   it('simple parse', function () {
     const rst = parser(simple)
@@ -38,6 +39,13 @@ describe('cclog-parser', function () {
 
   it('large parse', function () {
     const rst = parser(karma)
+    assert(rst.versions.length > 10)
+    assert(Object.keys(rst.changes).length > 10)
+    assert(Object.keys(rst.changes).length === rst.versions.length)
+  })
+
+  it('conventionalcommits parse', function () {
+    const rst = parser(conventionalcommits)
     assert(rst.versions.length > 10)
     assert(Object.keys(rst.changes).length > 10)
     assert(Object.keys(rst.changes).length === rst.versions.length)

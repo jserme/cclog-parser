@@ -10,13 +10,15 @@ const STATES = {
 
 const TYPES = {
   FIX: 'Bug Fixes',
-  FEAT: 'Features'
+  FEAT: 'Features',
+  BREAKING_CHANGES: 'BREAKING CHANGES'
 }
 
 function changeObj () {
   return {
     fixes: [],
-    features: []
+    features: [],
+    breakingChanges: []
   }
 }
 
@@ -90,6 +92,10 @@ function parseChangelog (changelog, options) {
           curType = 'features'
         }
 
+        if (buf === TYPES.BREAKING_CHANGES){
+          curType = 'breakingChanges'
+        }
+
         buf = ''
         state = STATES.NULL
       } else {
@@ -100,8 +106,9 @@ function parseChangelog (changelog, options) {
       if (include) {
         return function () {
           if (peek(cur) === EOL || EOF) {
-            rst.changes[curVerion][curType].push(buf)
-
+            if(curVerion && curType) {
+                rst.changes[curVerion][curType].push(buf)
+            }
             buf = ''
             state = STATES.NULL
           } else {
@@ -115,8 +122,9 @@ function parseChangelog (changelog, options) {
             peek(cur + 1) === '(' &&
             peek(cur + 2) === '['
           ) {
-            rst.changes[curVerion][curType].push(buf)
-
+            if(curVerion && curType) {
+                rst.changes[curVerion][curType].push(buf)
+            }
             buf = ''
             cur += 2
             state = STATES.NULL
