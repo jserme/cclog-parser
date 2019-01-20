@@ -16,6 +16,8 @@ describe('cclog-parser', function () {
   const simple = readFix('simple.md')
   const karma = readFix('karma.md')
   const conventionalcommits = readFix('conventionalcommits.md')
+  // mixed <a name="{Version}"></a> and [{Version}]()
+  const converntionalchangelog2 = readFix('converntional_changelog2.md')
 
   it('simple parse', function () {
     const rst = parser(simple)
@@ -51,5 +53,14 @@ describe('cclog-parser', function () {
     assert(Object.keys(rst.changes).length === rst.versions.length)
     // make sure breakingChanges has parsed correctly
     assert(Object.keys(rst.changes).some(v => { return rst.changes[v].breakingChanges.length > 0 }))
+  })
+  it('parse conventional-changelog@2.0.0+ format', function () {
+    const rst = parser(converntionalchangelog2)
+    assert.strictEqual(rst.changes['3.0.0'].fixes.length, 2)
+    assert.strictEqual(rst.changes['3.0.0'].features.length, 0)
+    assert.strictEqual(rst.changes['3.0.0'].breakingChanges.length, 1)
+    assert.strictEqual(rst.changes['2.0.0'].fixes.length, 0)
+    assert.strictEqual(rst.changes['2.0.0'].features.length, 0)
+    assert.strictEqual(rst.changes['3.0.0'].breakingChanges.length, 1)
   })
 })

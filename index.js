@@ -44,12 +44,56 @@ function parseChangelog (changelog, options) {
     return changelog[pos]
   }
 
+  const includeMarkdownVersionLink = /\[[\d.]+]\(http.+\)/.test(changelog)
+  const peekBeforeVersion = includeMarkdownVersionLink
+                      ? () => {
+                        // [{VERSION}](https://....)
+                        if (peek(cur) === '[' && /\d/.test(peek(cur + 1))) {
+                          state = STATES.VERSION
+                        }
+                      }
+                      : () => {
+                        // <a name={VERSION}></a>
+                        // Notes: conventional-changelog@2.0.0+ remove that a anchor
+                        // https://github.com/conventional-changelog/conventional-changelog/pull/301
+                        if (peek(cur) === '<' && peek(cur + 1) !== '/') {
+                          cur += 1
+                          state = STATES.BEFVERSION
+                        }
+                      }
+  const peekVersion = includeMarkdownVersionLink
+                            ? () => {
+                              // [{VERSION}](https://....)
+                              if (peek(cur) === ']') {
+                                rst.versions.push(buf)
+                                curVerion = buf
+                                rst.changes[curVerion] = changeObj()
+
+                                buf = ''
+                                state = STATES.NULL
+                              } else {
+                                buf += peek(cur)
+                              }
+                            }
+                            : () => {
+                              // <a name={VERSION}></a>
+                              // Notes: conventional-changelog@2.0.0+ remove that a anchor
+                              // https://github.com/conventional-changelog/conventional-changelog/pull/301
+                              if (peek(cur) === '"') {
+                                rst.versions.push(buf)
+                                curVerion = buf
+                                rst.changes[curVerion] = changeObj()
+
+                                buf = ''
+                                state = STATES.NULL
+                              } else {
+                                buf += peek(cur)
+                              }
+                            }
+
   const states = {
     'NULL': function () {
-      if (peek(cur) === '<' && peek(cur + 1) !== '/') {
-        cur += 1
-        state = STATES.BEFVERSION
-      }
+      peekBeforeVersion()
 
       if (peek(cur) === '#' &&
         peek(cur + 1) === '#' &&
@@ -71,16 +115,7 @@ function parseChangelog (changelog, options) {
       }
     },
     'VERSION': function () {
-      if (peek(cur) === '"') {
-        rst.versions.push(buf)
-        curVerion = buf
-        rst.changes[curVerion] = changeObj()
-
-        buf = ''
-        state = STATES.NULL
-      } else {
-        buf += peek(cur)
-      }
+      peekVersion()
     },
     'TYPE': function () {
       if (peek(cur) === EOL || EOF) {
