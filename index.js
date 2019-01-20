@@ -14,7 +14,7 @@ const TYPES = {
   BREAKING_CHANGES: 'BREAKING CHANGES'
 }
 
-function changeObj () {
+function changeObj() {
   return {
     fixes: [],
     features: [],
@@ -22,7 +22,7 @@ function changeObj () {
   }
 }
 
-function parseChangelog (changelog, options) {
+function parseChangelog(changelog, options) {
   const total = changelog.length
   let cur = 0
   let EOF = false
@@ -38,58 +38,55 @@ function parseChangelog (changelog, options) {
   }, options)
 
   let curType
-  let curVerion
+  let curVersion
 
-  function peek (pos) {
+  function peek(pos) {
     return changelog[pos]
   }
 
   const includeMarkdownVersionLink = /\[[\d.]+]\(http.+\)/.test(changelog)
-  const peekBeforeVersion = includeMarkdownVersionLink
-                      ? () => {
-                        // [{VERSION}](https://....)
-                        if (peek(cur) === '[' && /\d/.test(peek(cur + 1))) {
-                          state = STATES.VERSION
-                        }
-                      }
-                      : () => {
-                        // <a name={VERSION}></a>
-                        // Notes: conventional-changelog@2.0.0+ remove that a anchor
-                        // https://github.com/conventional-changelog/conventional-changelog/pull/301
-                        if (peek(cur) === '<' && peek(cur + 1) !== '/') {
-                          cur += 1
-                          state = STATES.BEFVERSION
-                        }
-                      }
-  const peekVersion = includeMarkdownVersionLink
-                            ? () => {
-                              // [{VERSION}](https://....)
-                              if (peek(cur) === ']') {
-                                rst.versions.push(buf)
-                                curVerion = buf
-                                rst.changes[curVerion] = changeObj()
 
-                                buf = ''
-                                state = STATES.NULL
-                              } else {
-                                buf += peek(cur)
-                              }
-                            }
-                            : () => {
-                              // <a name={VERSION}></a>
-                              // Notes: conventional-changelog@2.0.0+ remove that a anchor
-                              // https://github.com/conventional-changelog/conventional-changelog/pull/301
-                              if (peek(cur) === '"') {
-                                rst.versions.push(buf)
-                                curVerion = buf
-                                rst.changes[curVerion] = changeObj()
+  let peekBeforeVersion
 
-                                buf = ''
-                                state = STATES.NULL
-                              } else {
-                                buf += peek(cur)
-                              }
-                            }
+  if (includeMarkdownVersionLink) {
+    // [{VERSION}](https://....)
+    peekBeforeVersion = () => {
+      if (peek(cur) === '[' && /\d/.test(peek(cur + 1))) {
+        state = STATES.VERSION
+      }
+    }
+  } else {
+    // <a name={VERSION}></a>
+    // Notes: conventional-changelog@2.0.0+ remove that a anchor
+    // https://github.com/conventional-changelog/conventional-changelog/pull/301
+    peekBeforeVersion = () => {
+      if (peek(cur) === '<' && peek(cur + 1) !== '/') {
+        cur += 1
+        state = STATES.BEFVERSION
+      }
+    }
+  }
+
+
+  let peekVersionChar
+  if (includeMarkdownVersionLink) {
+    peekVersionChar = ']'
+  } else {
+    peekVersionChar = '"'
+  }
+
+  const peekVersion = () => {
+    if (peek(cur) === peekVersionChar) {
+      rst.versions.push(buf)
+      curVersion = buf
+      rst.changes[curVersion] = changeObj()
+
+      buf = ''
+      state = STATES.NULL
+    } else {
+      buf += peek(cur)
+    }
+  }
 
   const states = {
     'NULL': function () {
@@ -138,9 +135,9 @@ function parseChangelog (changelog, options) {
       }
     },
     'DES': (function (include) {
-      function pushBuf () {
-        if (curVerion && curType) {
-          rst.changes[curVerion][curType].push(buf)
+      function pushBuf() {
+        if (curVersion && curType) {
+          rst.changes[curVersion][curType].push(buf)
         }
       }
 
