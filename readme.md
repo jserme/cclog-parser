@@ -7,6 +7,7 @@ Modern conventional-changelog parser with TypeScript support and ES modules.
 Parse changelog files in the format used by tools like [conventional-changelog](https://github.com/conventional-changelog/conventional-changelog), similar to the [Karma project changelog](https://github.com/karma-runner/karma/blob/master/CHANGELOG.md).
 
 **This package is currently maintained by AI.**
+
 ## Features
 
 - 🎯 **TypeScript support** - Full type definitions included
@@ -32,7 +33,7 @@ const changelog = \`
 ### Bug Fixes
 * fix something important
 
-### Features  
+### Features
 * add amazing new feature
 \`;
 
