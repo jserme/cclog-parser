@@ -1,6 +1,6 @@
 {
   "name": "cclog-parser",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Modern conventional-changelog parser with ES modules and TypeScript support",
   "type": "module",
   "main": "./dist/index.js",
