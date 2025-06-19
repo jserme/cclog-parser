@@ -242,10 +242,10 @@ npm run format
 
 MIT © [jserme](http://jser.me/)
 
-[npm-img]: https://img.shields.io/npm/v/cclog-parser.sv
+[npm-img]: https://badgen.net/npm/v/cclog-parser
 [npm-url]: https://npmjs.com/package/cclog-parser
 [build-img]: https://github.com/jserme/cclog-parser/workflows/CI/badge.svg
 [build-url]: https://github.com/jserme/cclog-parser/actions
-[coverage-img]: https://codecov.io/gh/jserme/cclog-parser/branch/main/graph/badge.svg
+[coverage-img]: https://codecov.io/gh/jserme/cclog-parser/branch/master/graph/badge.svg
 [coverage-url]: https://codecov.io/gh/jserme/cclog-parser
 [downloads-img]: https://img.shields.io/npm/dm/cclog-parser.svg
